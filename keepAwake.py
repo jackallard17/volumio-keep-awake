@@ -9,14 +9,18 @@ run = False
 def checkVolumioStatus():
     global run
 
-    status = os.popen('volumio status').read()
-    statusJSON = json.loads(status, object_hook=lambda d: SimpleNamespace(**d))
-    print(statusJSON.status)
+    try:
+        status = os.popen('volumio status').read()
+        statusJSON = json.loads(status, object_hook=lambda d: SimpleNamespace(**d))
+        print(statusJSON.status)
 
-    if statusJSON.status == 'stop':
-        run = True
-    elif statusJSON.status == 'play':
-        run = False
+        if statusJSON.status == 'stop':
+            run = True
+        elif statusJSON.status == 'play':
+            run = False
+    except:
+        print('volumio not loaded yet...')
+
         
 #play silent .wav on 15min loop if volumio status is 'stop'
 while True:
